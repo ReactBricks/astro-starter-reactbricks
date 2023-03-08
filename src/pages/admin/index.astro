@@ -1,0 +1,12 @@
+---
+import { Admin, Login } from "react-bricks";
+import Layout from "../../layouts/layout.astro";
+---
+
+<Layout>
+  <title slot="head">Login</title>
+
+  <Admin isLogin client:only>
+    <Login client:only />
+  </Admin>
+</Layout>

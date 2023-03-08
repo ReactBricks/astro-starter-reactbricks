@@ -1,0 +1,26 @@
+---
+import Header from "../components/header";
+import Footer from "../components/footer";
+import { ReactBricks } from "react-bricks/frontend";
+import config from "../react-bricks/config";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <slot name="head" />
+  </head>
+  <body id="root">
+    <ReactBricks {...config} client:only="react">
+      <div
+        class="flex flex-col min-h-screen justify-between font-content antialiased"
+      >
+        <Header />
+        <main class="isolate mb-auto">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    </ReactBricks>
+  </body>
+</html>

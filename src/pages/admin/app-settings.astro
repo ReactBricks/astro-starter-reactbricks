@@ -1,0 +1,11 @@
+---
+import { Admin, AppSettings } from "react-bricks";
+import Layout from "../../layouts/layout.astro";
+---
+
+<Layout>
+   <title slot="head">App Settings</title>
+  <Admin client:only>
+    <AppSettings client:only />
+  </Admin>
+</Layout>

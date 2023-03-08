@@ -1,0 +1,12 @@
+---
+import { Admin, Playground } from "react-bricks";
+import Layout from "../../layouts/layout.astro";
+---
+
+<Layout>
+  <title slot="head">Playground</title>
+  <Admin client:only>
+
+    <Playground client:only />
+  </Admin>
+</Layout>

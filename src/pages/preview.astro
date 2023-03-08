@@ -1,0 +1,9 @@
+---
+import { Preview } from "react-bricks/frontend";
+import Layout from "../layouts/layout.astro";
+---
+
+<Layout>
+  <title slot="head">Preview</title>
+  <Preview client:only />
+</Layout>
