@@ -35,7 +35,12 @@ export default function ReactBricksApp({
     }
 
     return (
-      <a href={href} className={anchorClassName} tabIndex={tabIndex}>
+      <a
+        href={href}
+        className={anchorClassName}
+        tabIndex={tabIndex}
+        target="_top"
+      >
         {children}
       </a>
     )
