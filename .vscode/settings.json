@@ -1,0 +1,11 @@
+{
+  "prettier.documentSelectors": [
+    "**/*.astro"
+  ],
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  }
+}

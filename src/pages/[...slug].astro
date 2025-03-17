@@ -1,0 +1,10 @@
+---
+import { filterAndMapPaths } from '@/i18n/util'
+import { getStaticPaths as getStaticPathsRoot } from './[lang]/[...slug].astro'
+
+export async function getStaticPaths() {
+  const pathsRoot = await getStaticPathsRoot()
+
+  return filterAndMapPaths(pathsRoot)
+}
+---

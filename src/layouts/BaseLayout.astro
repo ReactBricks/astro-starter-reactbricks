@@ -1,0 +1,103 @@
+---
+import '@/styles/global.css'
+import '@fontsource-variable/nunito-sans'
+
+import ErrorNoFooter from '@/components/ErrorNoFooter.astro'
+import ErrorNoHeader from '@/components/ErrorNoHeader.astro'
+import ThemeManager from '@/components/ThemeManager.astro'
+import { defaultLocale } from '@/i18n/conf'
+import { ClientRouter } from 'astro:transitions'
+import { getBricks, reactBricksAstroStore } from 'react-bricks/astro'
+import PageViewer from 'react-bricks/astro/PageViewer.astro'
+import { cleanPage, fetchPage } from 'react-bricks/astro/server'
+
+interface Props {
+  lang?: string
+}
+
+const { lang = defaultLocale } = Astro.props
+
+const config = reactBricksAstroStore.getConfig()
+
+let errorHeader = false
+let errorFooter = false
+
+const [header, footer] = await Promise.all([
+  fetchPage({ slug: 'header', language: lang, config }).catch(() => {
+    errorHeader = true
+    return null
+  }),
+  fetchPage({ slug: 'footer', language: lang, config }).catch(() => {
+    errorFooter = true
+    return null
+  }),
+])
+
+// Clean the received content
+// Removes unknown or not allowed bricks
+const bricks = getBricks()
+const headerOk = header
+  ? cleanPage(header, config.pageTypes || [], bricks)
+  : null
+const footerOk = footer
+  ? cleanPage(footer, config.pageTypes || [], bricks)
+  : null
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <slot name="head" />
+    <ThemeManager defaultTheme="auto" />
+    <ClientRouter />
+
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: space-between;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family:
+          Nunito Sans Variable,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji';
+      }
+
+      .children-container {
+        margin-bottom: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <main class="children-container">
+        {
+          headerOk && !errorHeader ? (
+            <PageViewer page={headerOk} main={false} />
+          ) : (
+            <ErrorNoHeader />
+          )
+        }
+
+        <slot />
+
+        {
+          footerOk && !errorFooter ? (
+            <PageViewer page={footerOk} main={false} />
+          ) : (
+            <ErrorNoFooter />
+          )
+        }
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { getBricks, reactBricksAstroStore } from 'react-bricks/astro'
+import PageViewer from 'react-bricks/astro/PageViewer.astro'
+import { cleanPage, fetchPagePreview } from 'react-bricks/astro/server'
+
+export const prerender = 'server'
+
+const config = reactBricksAstroStore.getConfig()
+
+const token = Astro.url.searchParams.get('p') || ''
+if (!token) {
+  return new Response('Token not valid', { status: 401 })
+}
+
+const page = await fetchPagePreview({
+  token,
+  config,
+})
+
+// Clean the received content
+// Removes unknown or not allowed bricks
+const bricks = getBricks()
+const pageOk = page ? cleanPage(page, config.pageTypes || [], bricks) : null
+
+if (!pageOk) {
+  return new Response('Not Found', { status: 404 })
+}
+---
+
+<BaseLayout lang={pageOk.language}>
+  <Fragment slot="head">
+    <title>{pageOk?.meta.title || ''}</title>
+    <meta
+      name="description"
+      content={pageOk?.meta.description || pageOk?.meta.title || ''}
+    />
+  </Fragment>
+
+  <PageViewer page={pageOk} main />
+</BaseLayout>
